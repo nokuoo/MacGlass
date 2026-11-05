@@ -10,7 +10,16 @@ permissions:
 
 jobs:
   release:
-    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # 两个 runner 各自只编译原生架构，产物分架构发布。
+          - runner: macos-15-intel
+            arch: x86_64
+          - runner: macos-14
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v5
       - name: Show Swift version
@@ -20,9 +29,16 @@ jobs:
       - name: Build app bundle
         run: ./scripts/build-app.sh
       - name: Package unsigned app
-        run: ./scripts/package-release.sh "${GITHUB_REF_NAME}"
+        run: ./scripts/package-release.sh "${GITHUB_REF_NAME}" "${{ matrix.arch }}"
+      - name: Report architecture
+        run: lipo -info dist/MacGlass.app/Contents/MacOS/MacGlass
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/release/*
+          files: |
+            dist/release/MacGlass-*-${{ matrix.arch }}-unsigned.zip
+            dist/release/MacGlass-*-${{ matrix.arch }}-unsigned.zip.sha256
+            dist/release/MacGlass-*-${{ matrix.arch }}-unsigned.dmg
+            dist/release/MacGlass-*-${{ matrix.arch }}-unsigned.dmg.sha256
+            dist/release/README.txt
           generate_release_notes: true
