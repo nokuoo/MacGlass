@@ -1,0 +1,27 @@
+# Swift Package Manager
+.build/
+Package.resolved
+
+# 构建与发布产物
+dist/
+*.dmg
+*.zip
+*.app
+
+# 图标生成中间文件
+work/
+
+# macOS
+.DS_Store
+._*
+
+# Xcode
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+xcuserdata/
+
+# 日志与本地环境
+*.log
+.env
+.env.*
+*.local
