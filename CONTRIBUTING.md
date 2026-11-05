@@ -1,13 +1,15 @@
-# 参与贡献
+# Contributing
 
-## 开发环境
+Thanks for taking the time to improve MacGlass.
 
-- macOS 13 或更高版本
-- Xcode Command Line Tools（提供 `swift`、`codesign`、`iconutil`）
+## Development environment
 
-## 本地验证
+- macOS 13 or later
+- Xcode Command Line Tools (provides `swift`, `codesign`, `iconutil`)
 
-提交前至少运行：
+## Local checks
+
+Run at least the following before opening a pull request:
 
 ```bash
 swift test
@@ -15,22 +17,27 @@ swift build -c release --product MacGlass
 ./scripts/build-app.sh
 ```
 
-`build-app.sh` 会运行测试、生成 App 并做签名校验。发布前请再确认：
+`build-app.sh` runs the tests, builds the app bundle, and verifies the signature.
+Before publishing a release, also check:
 
 ```bash
 codesign --verify --deep --strict dist/MacGlass.app
 ```
 
-## 代码约定
+## Code conventions
 
-- 使用 Swift 6 并发模型，UI 与状态更新保持在 MainActor。
-- 外部命令必须使用参数化进程调用，不拼接 shell 字符串。
-- 修改透明度范围、快捷键或窗口筛选逻辑时，必须同步更新
-  `Tests/MacGlassCoreTests/` 中的测试。
-- Bundle ID 与签名标识统一使用 `com.macglass.app`，不要单独修改其中一个。
+- Follow the Swift 6 concurrency model; keep UI and state updates on the
+  MainActor.
+- Invoke external commands through parameterized process calls. Never
+  concatenate shell strings.
+- When you change the opacity range, shortcuts, or window filtering, update the
+  matching tests in `Tests/MacGlassCoreTests/`.
+- Keep the bundle identifier and signing identifier aligned on
+  `com.macglass.app`; do not change only one of them.
 
-## 提交与 PR
+## Commits and pull requests
 
-- 一个 PR 只解决一个主题，避免混入无关格式化。
-- PR 描述中写清复现步骤、修改点和验证方式。
-- 涉及 SIP、辅助功能、管理员授权或进程调用的改动，请额外说明安全影响。
+- One pull request should address one topic; avoid unrelated formatting churn.
+- Describe the reproduction steps, the changes, and how you verified them.
+- For changes touching SIP, Accessibility, administrator authorization, or
+  process invocation, call out the security impact explicitly.

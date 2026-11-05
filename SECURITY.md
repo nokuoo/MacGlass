@@ -1,24 +1,33 @@
-# 安全策略
+# Security Policy
 
-MacGlass 需要关闭 SIP 的部分保护，才能让 yabai 的 Dock scripting addition
-注入 WindowServer。这属于降低系统安全性的操作，请只在明确了解风险后使用。
+MacGlass requires disabling parts of SIP so the yabai Dock scripting addition can
+inject into WindowServer. That lowers system security; only proceed if you
+understand and accept the risk.
 
-## 报告漏洞
+## Reporting a vulnerability
 
-请不要在公开 Issue 中披露可被利用的细节。请通过 GitHub Security Advisory
-的私有报告入口提交，或直接联系维护者。收到报告后我们会尽快确认影响范围，
-并在修复发布后公开致谢（如果你愿意）。
+Please do not disclose exploitable details in a public issue. Use GitHub's
+private Security Advisory reporting flow, or contact the maintainer directly.
+We will confirm the impact as quickly as possible and credit you in the fix if
+you would like.
 
-## 安全边界
+## Security boundaries
 
-- 应用不保存管理员密码，授权只通过 macOS 原生管理员对话框完成。
-- 所有外部命令都使用 `Process.executableURL + arguments` 调用，不拼接 shell。
-- 应用不会自动修改 SIP、NVRAM 或其他系统安全配置；SIP 步骤必须由用户手动完成。
-- 应用退出时会恢复自己修改过的窗口透明度，并停止由它启动的 yabai daemon。
-- 如果检测到系统已有 yabai daemon，应用只复用，不会强制结束或改写其配置。
+- The app never stores administrator passwords; authorization happens only
+  through the native macOS administrator dialog.
+- Every external command is invoked with `Process.executableURL + arguments`;
+  no shell strings are built.
+- The app never changes SIP, NVRAM, or other system security settings on its
+  own. SIP steps are always performed manually by the user.
+- On quit, the app restores every window opacity it changed, then stops the
+  yabai daemon it started.
+- If a yabai daemon already exists, the app only reuses it and never force-stops
+  or rewrites its configuration.
 
-## 分发说明
+## Distribution
 
-本项目默认发布源码和未签名构建。未签名构建可能被 Gatekeeper 拦截，需要在
-“系统设置 → 隐私与安全性”中手动允许。正式签名和公证只改变分发体验，
-不改变上述权限边界。
+This project publishes source code and unsigned builds. Unsigned builds may be
+blocked by Gatekeeper and need to be allowed manually in
+System Settings → Privacy & Security. Proper signing and notarization only
+change the distribution experience; they do not change the permission
+boundaries above.
