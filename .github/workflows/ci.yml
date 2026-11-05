@@ -9,13 +9,13 @@ jobs:
   test:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Show Swift version
         run: swift --version
       - name: Run tests
         run: swift test
       - name: Build release
-        run: swift build -c release --product WindowGlass
+        run: swift build -c release --product MacGlass
       - name: Build app bundle
         run: ./scripts/build-app.sh
       - name: Verify signature
